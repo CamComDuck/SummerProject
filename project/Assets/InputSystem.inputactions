@@ -31,6 +31,24 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "RotatePlace",
+                    "type": "Button",
+                    "id": "f0ea20a3-b3ab-4b3c-9027-d55f80a71448",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Place",
+                    "type": "Button",
+                    "id": "edbf8af1-defd-4d34-bee7-4d03a9ac8e42",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -223,8 +241,8 @@
                 },
                 {
                     "name": "",
-                    "id": "0765881b-b05b-4afa-ac8a-835f49bcceac",
-                    "path": "<Keyboard>/r",
+                    "id": "c8ad00e0-ed3b-41ed-a82c-bccca4dd1a59",
+                    "path": "<Keyboard>/shift",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -234,12 +252,23 @@
                 },
                 {
                     "name": "",
-                    "id": "c8ad00e0-ed3b-41ed-a82c-bccca4dd1a59",
-                    "path": "<Keyboard>/shift",
+                    "id": "b0016a81-e87a-4223-832e-8fd283c92843",
+                    "path": "<Keyboard>/r",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "RotateToggle",
+                    "action": "RotatePlace",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "10c29e8d-c2ef-445f-ba3a-a662004529cc",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Place",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour {
 
-    private const float moveSpeed = 10f;
+    private float moveSpeed = 30f;
 
     private void Update() {
         HandleMovement();

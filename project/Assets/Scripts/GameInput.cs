@@ -6,7 +6,9 @@ public class GameInput : MonoBehaviour {
     
     // public static event EventHandler OnCameraPanPerformed;
     // public static event EventHandler OnCameraZoomPerformed;
-    public static event EventHandler OnCameraRotateTogglePerformed;
+    // public static event EventHandler OnCameraRotateTogglePerformed;
+    public static event EventHandler OnCameraRotatePlacedPerformed;
+    public static event EventHandler OnPlacePerformed;
 
     private static InputSystem inputSystem;
 
@@ -20,6 +22,8 @@ public class GameInput : MonoBehaviour {
         // inputSystem.Camera.Zoom.performed += Zoom_performed;
         inputSystem.Camera.RotateToggle.performed += RotateToggle_performed;
         inputSystem.Camera.RotateToggle.canceled += RotateToggle_canceled;
+        inputSystem.Camera.RotatePlace.performed += RotatePlaced_performed;
+        inputSystem.Camera.Place.performed += Place_performed;
     }
 
     public static Vector2 GetPanVectorNormalized() {
@@ -46,13 +50,19 @@ public class GameInput : MonoBehaviour {
 
     private void RotateToggle_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj) {
         isRotateToggled = true;
-        Debug.Log(isRotateToggled);
         // OnCameraRotateTogglePerformed?.Invoke(this, EventArgs.Empty);
     }
 
     private void RotateToggle_canceled(UnityEngine.InputSystem.InputAction.CallbackContext obj) {
         isRotateToggled = false;
-        Debug.Log(isRotateToggled);
         // OnCameraRotateTogglePerformed?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void RotatePlaced_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj) {
+        OnCameraRotatePlacedPerformed?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void Place_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj) {
+        OnPlacePerformed?.Invoke(this, EventArgs.Empty);
     }
 }

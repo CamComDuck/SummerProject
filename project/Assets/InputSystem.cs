@@ -117,6 +117,24 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""RotatePlace"",
+                    ""type"": ""Button"",
+                    ""id"": ""f0ea20a3-b3ab-4b3c-9027-d55f80a71448"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Place"",
+                    ""type"": ""Button"",
+                    ""id"": ""edbf8af1-defd-4d34-bee7-4d03a9ac8e42"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -309,8 +327,8 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""0765881b-b05b-4afa-ac8a-835f49bcceac"",
-                    ""path"": ""<Keyboard>/r"",
+                    ""id"": ""c8ad00e0-ed3b-41ed-a82c-bccca4dd1a59"",
+                    ""path"": ""<Keyboard>/shift"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -320,12 +338,23 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""c8ad00e0-ed3b-41ed-a82c-bccca4dd1a59"",
-                    ""path"": ""<Keyboard>/shift"",
+                    ""id"": ""b0016a81-e87a-4223-832e-8fd283c92843"",
+                    ""path"": ""<Keyboard>/r"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""RotateToggle"",
+                    ""action"": ""RotatePlace"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""10c29e8d-c2ef-445f-ba3a-a662004529cc"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Place"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -400,6 +429,8 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
         m_Camera_Pan = m_Camera.FindAction("Pan", throwIfNotFound: true);
         m_Camera_Zoom = m_Camera.FindAction("Zoom", throwIfNotFound: true);
         m_Camera_RotateToggle = m_Camera.FindAction("RotateToggle", throwIfNotFound: true);
+        m_Camera_RotatePlace = m_Camera.FindAction("RotatePlace", throwIfNotFound: true);
+        m_Camera_Place = m_Camera.FindAction("Place", throwIfNotFound: true);
     }
 
     ~@InputSystem()
@@ -483,6 +514,8 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
     private readonly InputAction m_Camera_Pan;
     private readonly InputAction m_Camera_Zoom;
     private readonly InputAction m_Camera_RotateToggle;
+    private readonly InputAction m_Camera_RotatePlace;
+    private readonly InputAction m_Camera_Place;
     /// <summary>
     /// Provides access to input actions defined in input action map "Camera".
     /// </summary>
@@ -506,6 +539,14 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Camera/RotateToggle".
         /// </summary>
         public InputAction @RotateToggle => m_Wrapper.m_Camera_RotateToggle;
+        /// <summary>
+        /// Provides access to the underlying input action "Camera/RotatePlace".
+        /// </summary>
+        public InputAction @RotatePlace => m_Wrapper.m_Camera_RotatePlace;
+        /// <summary>
+        /// Provides access to the underlying input action "Camera/Place".
+        /// </summary>
+        public InputAction @Place => m_Wrapper.m_Camera_Place;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -541,6 +582,12 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
             @RotateToggle.started += instance.OnRotateToggle;
             @RotateToggle.performed += instance.OnRotateToggle;
             @RotateToggle.canceled += instance.OnRotateToggle;
+            @RotatePlace.started += instance.OnRotatePlace;
+            @RotatePlace.performed += instance.OnRotatePlace;
+            @RotatePlace.canceled += instance.OnRotatePlace;
+            @Place.started += instance.OnPlace;
+            @Place.performed += instance.OnPlace;
+            @Place.canceled += instance.OnPlace;
         }
 
         /// <summary>
@@ -561,6 +608,12 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
             @RotateToggle.started -= instance.OnRotateToggle;
             @RotateToggle.performed -= instance.OnRotateToggle;
             @RotateToggle.canceled -= instance.OnRotateToggle;
+            @RotatePlace.started -= instance.OnRotatePlace;
+            @RotatePlace.performed -= instance.OnRotatePlace;
+            @RotatePlace.canceled -= instance.OnRotatePlace;
+            @Place.started -= instance.OnPlace;
+            @Place.performed -= instance.OnPlace;
+            @Place.canceled -= instance.OnPlace;
         }
 
         /// <summary>
@@ -687,5 +740,19 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnRotateToggle(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "RotatePlace" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnRotatePlace(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Place" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnPlace(InputAction.CallbackContext context);
     }
 }
