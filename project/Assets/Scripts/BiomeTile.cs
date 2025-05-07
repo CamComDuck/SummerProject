@@ -29,8 +29,8 @@ public class BiomeTile {
     }
 
     public override string ToString() {
-        return "(" + gridPosition.x + ", " + gridPosition.y + ")\n" + this.biome?.GetBiomeSO().GetName();
-        // return "(" + gridPosition.x + ", " + gridPosition.y + "): " + this.biome?.GetBiomeSO().GetName();
+        // return "(" + gridPosition.x + ", " + gridPosition.y + ")\n" + this.biome?.GetBiomeSO().GetName();
+        return "(" + gridPosition.x + ", " + gridPosition.y + "): " + this.biome?.GetBiomeSO().GetName();
         // return this.placedObject?.GetFurnitureObject().GetFurnitureObjectSO().GetObjectName();
     }
 

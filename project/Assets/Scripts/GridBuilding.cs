@@ -38,6 +38,10 @@ public class GridBuilding : MonoBehaviour {
     private void Start() {
         GameInput.OnCameraRotatePlacedPerformed += GameInput_OnRotatePlacedPerformed;
         GameInput.OnPlacePerformed += GameInput_OnPlacePerformed;
+
+        Vector3 worldPosition = WorldBiomes.GetWorldPosition(WorldBiomes.GetCenterGridPosition());
+        PlacedBiome placedBiome = PlacedBiome.Create(worldPosition, WorldBiomes.GetCenterGridPosition(), placingDirection, biomeSOs[0]);
+        WorldBiomes.GetGridObject(WorldBiomes.GetCenterGridPosition()).SetBiomeObject(placedBiome);
     }
 
     private void GameInput_OnRotatePlacedPerformed(object sender, System.EventArgs e) {
@@ -60,11 +64,27 @@ public class GridBuilding : MonoBehaviour {
             } else if (biomeGrid.GetGridObject(placingGridPosition).HasBiomeObject()) {
                 // Debug.LogWarning("Biome already on this grid tile!");
                 return false;
-            } 
+            }
 
-            Vector3 placedFurnitureWorldPosition = biomeGrid.GetWorldPosition(placingGridPosition);
-            PlacedBiome placedObject = PlacedBiome.Create(placedFurnitureWorldPosition, placingGridPosition, placingDirection, biomeSO);
-            biomeGrid.GetGridObject(placingGridPosition).SetBiomeObject(placedObject);
+            List<BiomeTile> neighborBiomes = WorldBiomes.GetNeighborGridObjects(placingGridPosition);
+            bool foundNeighbor = false;
+            foreach (BiomeTile biomeTile in neighborBiomes) {
+                if (biomeTile != null) {
+                    if (biomeTile.HasBiomeObject()) {
+                        foundNeighbor = true;
+                        break;
+                    }
+                }
+            }
+            
+            if (!foundNeighbor) {
+                // Debug.LogWarning("There are no biome tile neighbors");
+                return false;
+            }
+
+            Vector3 worldPosition = biomeGrid.GetWorldPosition(placingGridPosition);
+            PlacedBiome placedBiome = PlacedBiome.Create(worldPosition, placingGridPosition, placingDirection, biomeSO);
+            biomeGrid.GetGridObject(placingGridPosition).SetBiomeObject(placedBiome);
             
             return true;
             

@@ -122,4 +122,18 @@ public class GridXZ<TGridObject> {
             }
         }
     }
+
+    public List<TGridObject> GetNeighborGridObjects(Vector2Int originGridPosition) {
+        List<TGridObject> output = new List<TGridObject>();
+        List<Vector2Int> neighborGridPositions = new List<Vector2Int>();
+        neighborGridPositions.Add(new Vector2Int(originGridPosition.x - 1, originGridPosition.y));
+        neighborGridPositions.Add(new Vector2Int(originGridPosition.x + 1, originGridPosition.y));
+        neighborGridPositions.Add(new Vector2Int(originGridPosition.x, originGridPosition.y + 1));
+        neighborGridPositions.Add(new Vector2Int(originGridPosition.x, originGridPosition.y - 1));
+
+        foreach (Vector2Int position in neighborGridPositions) {
+            output.Add(GetGridObject(position));
+        }
+        return output;
+    }
 }
