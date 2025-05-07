@@ -16,6 +16,7 @@ public class GridBuilding : MonoBehaviour {
     public List<BiomeSO> biomeSOs = new List<BiomeSO>();
 
     private Directions placingDirection = Directions.Down;
+    private BiomeSelectionPanel biomeSelectionPanel;
 
     public enum Directions {
         Down,
@@ -28,8 +29,8 @@ public class GridBuilding : MonoBehaviour {
         if (Instance != null) Debug.LogError("There is more than one GridBuildingSystem instance!");
         Instance = this;
 
-        int gridSize = 50;
-        int tileSize = 10;
+        const int gridSize = 50;
+        const int tileSize = 10;
         Vector3 origin = new Vector3((gridSize * -1 * 0.5f) * tileSize, 0, (gridSize * -1 * 0.5f) * tileSize);
 
         WorldBiomes = new GridXZ<BiomeTile>(new Vector2Int(gridSize, gridSize), tileSize, origin, (GridXZ<BiomeTile> g, Vector2Int v) => new BiomeTile(g, v));
@@ -38,6 +39,7 @@ public class GridBuilding : MonoBehaviour {
     private void Start() {
         GameInput.OnCameraRotatePlacedPerformed += GameInput_OnRotatePlacedPerformed;
         GameInput.OnPlacePerformed += GameInput_OnPlacePerformed;
+        biomeSelectionPanel = FindFirstObjectByType<BiomeSelectionPanel>();
 
         Vector3 worldPosition = WorldBiomes.GetWorldPosition(WorldBiomes.GetCenterGridPosition());
         PlacedBiome placedBiome = PlacedBiome.Create(worldPosition, WorldBiomes.GetCenterGridPosition(), placingDirection, biomeSOs[0]);
@@ -52,7 +54,7 @@ public class GridBuilding : MonoBehaviour {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit raycastHit)) {
             Vector2Int gridPosition = WorldBiomes.GetGridPosition(raycastHit.point);
-            PlaceBiomeOnGrid(WorldBiomes, gridPosition, biomeSOs[0]);
+            PlaceBiomeOnGrid(WorldBiomes, gridPosition, biomeSelectionPanel.GetSelectedBiome());
         }
     }
 

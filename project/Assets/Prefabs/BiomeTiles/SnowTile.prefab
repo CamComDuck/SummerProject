@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &6915973905605330613
+--- !u!1001 &6927238679443010072
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -48,13 +48,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3567732237866308788, guid: 5b4d75f6039427f43a7807dc356b359c, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 50a4cc89bae2d744b871b26775165cd0, type: 2}
     - target: {fileID: 3637656314221874025, guid: 5b4d75f6039427f43a7807dc356b359c, type: 3}
       propertyPath: m_Name
-      value: ForestTile
+      value: SnowTile
+      objectReference: {fileID: 0}
+    - target: {fileID: 6400250741436444128, guid: 5b4d75f6039427f43a7807dc356b359c, type: 3}
+      propertyPath: m_Area
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 7018196510480087331, guid: 5b4d75f6039427f43a7807dc356b359c, type: 3}
       propertyPath: m_Area
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
