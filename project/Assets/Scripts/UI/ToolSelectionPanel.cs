@@ -1,7 +1,10 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class ToolSelectionPanel : MonoBehaviour {
+    
+    public event EventHandler OnNewToolSelected;
 
     [SerializeField] private GameObject selectButton;
     [SerializeField] private GameObject placeButton;
@@ -20,30 +23,31 @@ public class ToolSelectionPanel : MonoBehaviour {
     private void Awake() {
         normalColor = selectButton.GetComponent<Button>().colors.normalColor;
         selectedColor = selectButton.GetComponent<Button>().colors.selectedColor;
-        SelectToolClicked();
     }
 
     private void Start() {
         selectButton.GetComponent<Button>().onClick.AddListener(SelectToolClicked);
         placeButton.GetComponent<Button>().onClick.AddListener(PlaceToolClicked);
         destroyButton.GetComponent<Button>().onClick.AddListener(DestroyToolClicked);
+        SelectToolClicked();
     }
 
     private void SelectToolClicked() {
-        SetButtonColor(normalColor);
-        selectedTool = Tools.Select;
-        SetButtonColor(selectedColor);
+        SetSelectedTool(Tools.Select);
     }
 
     private void PlaceToolClicked() {
-        SetButtonColor(normalColor);
-        selectedTool = Tools.Place;
-        SetButtonColor(selectedColor);
+        SetSelectedTool(Tools.Place);
     }
 
     private void DestroyToolClicked() {
+        SetSelectedTool(Tools.Destroy);
+    }
+
+    private void SetSelectedTool(Tools newTool) {
         SetButtonColor(normalColor);
-        selectedTool = Tools.Destroy;
+        selectedTool = newTool;
+        OnNewToolSelected?.Invoke(this, EventArgs.Empty);
         SetButtonColor(selectedColor);
     }
 

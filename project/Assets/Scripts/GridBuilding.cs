@@ -17,6 +17,7 @@ public class GridBuilding : MonoBehaviour {
 
     private Directions placingDirection = Directions.Down;
     private BiomeSelectionPanel biomeSelectionPanel;
+    private ToolSelectionPanel toolSelectionPanel;
 
     public enum Directions {
         Down,
@@ -40,6 +41,7 @@ public class GridBuilding : MonoBehaviour {
         GameInput.OnCameraRotatePlacedPerformed += GameInput_OnRotatePlacedPerformed;
         GameInput.OnPlacePerformed += GameInput_OnPlacePerformed;
         biomeSelectionPanel = FindFirstObjectByType<BiomeSelectionPanel>();
+        toolSelectionPanel = FindFirstObjectByType<ToolSelectionPanel>();
 
         Vector3 worldPosition = WorldBiomes.GetWorldPosition(WorldBiomes.GetCenterGridPosition());
         PlacedBiome placedBiome = PlacedBiome.Create(worldPosition, WorldBiomes.GetCenterGridPosition(), placingDirection, biomeSOs[0]);
@@ -51,6 +53,7 @@ public class GridBuilding : MonoBehaviour {
     }
 
     private void GameInput_OnPlacePerformed(object sender, System.EventArgs e) {
+        if (toolSelectionPanel.GetSelectedTool() != ToolSelectionPanel.Tools.Place) return;
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit raycastHit)) {
             Vector2Int gridPosition = WorldBiomes.GetGridPosition(raycastHit.point);

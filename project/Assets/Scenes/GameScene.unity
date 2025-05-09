@@ -894,7 +894,7 @@ MonoBehaviour:
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.8238993, g: 0.8238993, b: 0.8238993, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_PressedColor: {r: 0.7176471, g: 0.7176471, b: 0.7176471, a: 1}
     m_SelectedColor: {r: 0.7169812, g: 0.7169812, b: 0.7169812, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.6439216, b: 0.6439216, a: 1}
     m_ColorMultiplier: 1
@@ -1015,7 +1015,7 @@ MonoBehaviour:
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.827451, g: 0.827451, b: 0.827451, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_PressedColor: {r: 0.7176471, g: 0.7176471, b: 0.7176471, a: 1}
     m_SelectedColor: {r: 0.7169812, g: 0.7169812, b: 0.7169812, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.6439216, b: 0.6439216, a: 1}
     m_ColorMultiplier: 1
@@ -1136,7 +1136,7 @@ MonoBehaviour:
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.827451, g: 0.827451, b: 0.827451, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+    m_PressedColor: {r: 0.7176471, g: 0.7176471, b: 0.7176471, a: 1}
     m_SelectedColor: {r: 0.7169812, g: 0.7169812, b: 0.7169812, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.6439216, b: 0.6439216, a: 1}
     m_ColorMultiplier: 1
@@ -1389,7 +1389,6 @@ GameObject:
   - component: {fileID: 1089772189}
   - component: {fileID: 1089772188}
   - component: {fileID: 1089772187}
-  - component: {fileID: 1089772186}
   m_Layer: 5
   m_Name: BiomeSelectionPanel
   m_TagString: Untagged
@@ -1416,21 +1415,6 @@ RectTransform:
   m_AnchoredPosition: {x: -20, y: -20}
   m_SizeDelta: {x: 150, y: 142.3}
   m_Pivot: {x: 1, y: 1}
---- !u!114 &1089772186
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1089772184}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 735853e3786df7741ac5ea8226e8464b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  biomePanelPrefab: {fileID: -1593800607116533998, guid: ce96193f2bf079d4caddbd7678be83ac, type: 3}
-  testingSO: {fileID: 11400000, guid: 1544a6cf7e96911439c7040f888b809f, type: 2}
-  testingSO2: {fileID: 11400000, guid: aca35e0a2f74d7f4b83094ad24553328, type: 2}
 --- !u!114 &1089772187
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1495,6 +1479,54 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1089772184}
   m_CullTransparentMesh: 1
+--- !u!1 &1093255709
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1093255710}
+  - component: {fileID: 1093255711}
+  m_Layer: 0
+  m_Name: BiomeSelection
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1093255710
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1093255709}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1828617793}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1093255711
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1093255709}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 735853e3786df7741ac5ea8226e8464b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  biomePanelPrefab: {fileID: -1593800607116533998, guid: ce96193f2bf079d4caddbd7678be83ac, type: 3}
+  biomePanelObject: {fileID: 1089772184}
+  testingSO: {fileID: 11400000, guid: 1544a6cf7e96911439c7040f888b809f, type: 2}
+  testingSO2: {fileID: 11400000, guid: aca35e0a2f74d7f4b83094ad24553328, type: 2}
 --- !u!1 &1657734790
 GameObject:
   m_ObjectHideFlags: 0
@@ -1706,6 +1738,7 @@ Transform:
   m_Children:
   - {fileID: 1662264823}
   - {fileID: 2078184976}
+  - {fileID: 1093255710}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1869813184

@@ -30,4 +30,16 @@ public class BiomePanel : MonoBehaviour {
     private void OnClicked() {
         OnBiomePanelClicked?.Invoke(this, EventArgs.Empty);
     }
+
+    public void SetColor(Color newColor) {
+        GetComponent<Image>().color = newColor;
+    }
+
+    public Color GetNormalColor() {
+        return GetComponent<Button>().colors.normalColor;
+    }
+
+    public Color GetSelectedColor() {
+        return GetComponent<Button>().colors.selectedColor;
+    }
 }
