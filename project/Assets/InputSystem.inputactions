@@ -42,7 +42,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Place",
+                    "name": "Click",
                     "type": "Button",
                     "id": "edbf8af1-defd-4d34-bee7-4d03a9ac8e42",
                     "expectedControlType": "",
@@ -268,7 +268,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Place",
+                    "action": "Click",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

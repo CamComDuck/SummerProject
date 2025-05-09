@@ -128,7 +128,7 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Place"",
+                    ""name"": ""Click"",
                     ""type"": ""Button"",
                     ""id"": ""edbf8af1-defd-4d34-bee7-4d03a9ac8e42"",
                     ""expectedControlType"": """",
@@ -354,7 +354,7 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Place"",
+                    ""action"": ""Click"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -430,7 +430,7 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
         m_Camera_Zoom = m_Camera.FindAction("Zoom", throwIfNotFound: true);
         m_Camera_RotateToggle = m_Camera.FindAction("RotateToggle", throwIfNotFound: true);
         m_Camera_RotatePlace = m_Camera.FindAction("RotatePlace", throwIfNotFound: true);
-        m_Camera_Place = m_Camera.FindAction("Place", throwIfNotFound: true);
+        m_Camera_Click = m_Camera.FindAction("Click", throwIfNotFound: true);
     }
 
     ~@InputSystem()
@@ -515,7 +515,7 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
     private readonly InputAction m_Camera_Zoom;
     private readonly InputAction m_Camera_RotateToggle;
     private readonly InputAction m_Camera_RotatePlace;
-    private readonly InputAction m_Camera_Place;
+    private readonly InputAction m_Camera_Click;
     /// <summary>
     /// Provides access to input actions defined in input action map "Camera".
     /// </summary>
@@ -544,9 +544,9 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
         /// </summary>
         public InputAction @RotatePlace => m_Wrapper.m_Camera_RotatePlace;
         /// <summary>
-        /// Provides access to the underlying input action "Camera/Place".
+        /// Provides access to the underlying input action "Camera/Click".
         /// </summary>
-        public InputAction @Place => m_Wrapper.m_Camera_Place;
+        public InputAction @Click => m_Wrapper.m_Camera_Click;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -585,9 +585,9 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
             @RotatePlace.started += instance.OnRotatePlace;
             @RotatePlace.performed += instance.OnRotatePlace;
             @RotatePlace.canceled += instance.OnRotatePlace;
-            @Place.started += instance.OnPlace;
-            @Place.performed += instance.OnPlace;
-            @Place.canceled += instance.OnPlace;
+            @Click.started += instance.OnClick;
+            @Click.performed += instance.OnClick;
+            @Click.canceled += instance.OnClick;
         }
 
         /// <summary>
@@ -611,9 +611,9 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
             @RotatePlace.started -= instance.OnRotatePlace;
             @RotatePlace.performed -= instance.OnRotatePlace;
             @RotatePlace.canceled -= instance.OnRotatePlace;
-            @Place.started -= instance.OnPlace;
-            @Place.performed -= instance.OnPlace;
-            @Place.canceled -= instance.OnPlace;
+            @Click.started -= instance.OnClick;
+            @Click.performed -= instance.OnClick;
+            @Click.canceled -= instance.OnClick;
         }
 
         /// <summary>
@@ -748,11 +748,11 @@ public partial class @InputSystem: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnRotatePlace(InputAction.CallbackContext context);
         /// <summary>
-        /// Method invoked when associated input action "Place" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// Method invoked when associated input action "Click" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
         /// </summary>
         /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
-        void OnPlace(InputAction.CallbackContext context);
+        void OnClick(InputAction.CallbackContext context);
     }
 }

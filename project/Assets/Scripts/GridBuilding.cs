@@ -39,7 +39,7 @@ public class GridBuilding : MonoBehaviour {
 
     private void Start() {
         GameInput.OnCameraRotatePlacedPerformed += GameInput_OnRotatePlacedPerformed;
-        GameInput.OnPlacePerformed += GameInput_OnPlacePerformed;
+        GameInput.OnClickPerformed += GameInput_OnClickPerformed;
         biomeSelectionPanel = FindFirstObjectByType<BiomeSelectionPanel>();
         toolSelectionPanel = FindFirstObjectByType<ToolSelectionPanel>();
 
@@ -52,13 +52,25 @@ public class GridBuilding : MonoBehaviour {
         ChangeObjectRotation();
     }
 
-    private void GameInput_OnPlacePerformed(object sender, System.EventArgs e) {
-        if (!toolSelectionPanel.IsSelectedToolAction(ToolSO.Action.Place)) return;
-        
+    private void GameInput_OnClickPerformed(object sender, System.EventArgs e) {
+        if (toolSelectionPanel.IsSelectedToolAction(ToolSO.Action.Select)) return;
+
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit raycastHit)) {
             Vector2Int gridPosition = WorldBiomes.GetGridPosition(raycastHit.point);
-            PlaceBiomeOnGrid(WorldBiomes, gridPosition, biomeSelectionPanel.GetSelectedBiome());
+
+            if (toolSelectionPanel.IsSelectedToolAction(ToolSO.Action.Place)) {
+                PlaceBiomeOnGrid(WorldBiomes, gridPosition, biomeSelectionPanel.GetSelectedBiome());
+            } else if (toolSelectionPanel.IsSelectedToolAction(ToolSO.Action.Destroy)) {
+                int count = 0;
+                foreach (BiomeTile biomeTile in WorldBiomes.GetAllGridObjects()) {
+                    if (biomeTile.HasBiomeObject()) count += 1;
+                }
+                if (count <= 1) return; // Can't destroy the only tile
+                
+                DestroyObjectOnGrid(WorldBiomes, gridPosition);
+            }
+            
         }
     }
 
@@ -100,18 +112,32 @@ public class GridBuilding : MonoBehaviour {
         }
     }
 
-    public void DestroyObjectOnGrid(GridXZ<BiomeTile> grid, BiomeTile biome) {
+    public bool DestroyObjectOnGrid(GridXZ<BiomeTile> grid, BiomeTile biome) {
         PlacedBiome placedBiome = biome.GetBiomeObject();
+        return DestroyObjectOnGrid(grid, placedBiome);
+    }
+
+    public bool DestroyObjectOnGrid(GridXZ<BiomeTile> grid, PlacedBiome placedBiome) {
         if (placedBiome != null) {
-            placedBiome?.DestroySelf();
+            placedBiome.DestroySelf();
             grid.GetGridObject(placedBiome.GetGridPosition()).ClearBiomeObject();
+            return true;
+        } else {
+            return false;
         }
     }
 
-    public void DestroyObjectOnGrid(GridXZ<BiomeTile> grid, PlacedBiome placedBiome) {
-        if (placedBiome != null) {
-            placedBiome?.DestroySelf();
-            grid.GetGridObject(placedBiome.GetGridPosition()).ClearBiomeObject();
+    public bool DestroyObjectOnGrid(GridXZ<BiomeTile> grid, Vector2Int gridPosition) {
+        if (gridPosition.x >= 0 && gridPosition.y >= 0) {
+            if (grid.HasGridObject(gridPosition)) {
+                BiomeTile placedBiome = grid.GetGridObject(gridPosition);
+                return DestroyObjectOnGrid(grid, placedBiome);
+            } else {
+                return false;
+            }
+        } else {
+            Debug.LogWarning("Clicked outside of grid!");
+            return false;
         }
     }
 

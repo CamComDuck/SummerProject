@@ -8,7 +8,7 @@ public class GameInput : MonoBehaviour {
     // public static event EventHandler OnCameraZoomPerformed;
     // public static event EventHandler OnCameraRotateTogglePerformed;
     public static event EventHandler OnCameraRotatePlacedPerformed;
-    public static event EventHandler OnPlacePerformed;
+    public static event EventHandler OnClickPerformed;
 
     private static InputSystem inputSystem;
 
@@ -23,7 +23,7 @@ public class GameInput : MonoBehaviour {
         inputSystem.Camera.RotateToggle.performed += RotateToggle_performed;
         inputSystem.Camera.RotateToggle.canceled += RotateToggle_canceled;
         inputSystem.Camera.RotatePlace.performed += RotatePlaced_performed;
-        inputSystem.Camera.Place.performed += Place_performed;
+        inputSystem.Camera.Click.performed += Click_performed;
     }
 
     public static Vector2 GetPanVectorNormalized() {
@@ -62,7 +62,7 @@ public class GameInput : MonoBehaviour {
         OnCameraRotatePlacedPerformed?.Invoke(this, EventArgs.Empty);
     }
 
-    private void Place_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj) {
-        OnPlacePerformed?.Invoke(this, EventArgs.Empty);
+    private void Click_performed(UnityEngine.InputSystem.InputAction.CallbackContext obj) {
+        OnClickPerformed?.Invoke(this, EventArgs.Empty);
     }
 }
