@@ -22,9 +22,10 @@ public class ToolSelectionPanel : MonoBehaviour {
             newToolButton.OnToolButtonClicked += ToolButton_OnToolButtonClicked;
             toolButtons.Add(newToolButton);
         }
+        
         normalColor = toolButtons[0].GetNormalColor();
         highlightedColor = toolButtons[0].GetHighlightedColor();
-        SetSelectedTool(toolButtons[0]);
+        SetDestroyEnabled(false);
     }
 
     private void ToolButton_OnToolButtonClicked(object sender, System.EventArgs e) {
@@ -44,5 +45,22 @@ public class ToolSelectionPanel : MonoBehaviour {
 
     public bool IsSelectedToolAction(ToolSO.Action action) {
         return selectedTool.GetToolSO().IsAction(action);
+    }
+
+    public void SetDestroyEnabled(bool isEnabled) {
+        ToolButton destroyButton = GetToolButton(ToolSO.Action.Destroy);
+        destroyButton.SetButtonEnabled(isEnabled);
+        if (!isEnabled) {
+            SetSelectedTool(GetToolButton(ToolSO.Action.Select));
+        }
+    }
+
+    private ToolButton GetToolButton(ToolSO.Action action) {
+        foreach (ToolButton button in toolButtons) {
+            if (button.GetToolSO().IsAction(action)) {
+                return button;
+            }
+        }
+        return null;
     }
 }

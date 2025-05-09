@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Place
   m_EditorClassIdentifier: 
   toolName: Place
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 49214f4fa1b7bfa48b5d9daeacfde40c, type: 3}
   action: 1

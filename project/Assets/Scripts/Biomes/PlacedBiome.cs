@@ -8,7 +8,8 @@ public class PlacedBiome : MonoBehaviour {
     private BiomeSO biomeSO;
 
     public static PlacedBiome Create(Vector3 worldPosition, Vector2Int gridPosition, GridBuilding.Directions dir, BiomeSO newBiomeSO) {
-        Transform placedObjectTransform = Instantiate(newBiomeSO.GetPrefab(), worldPosition, Quaternion.Euler(0, GridBuilding.Instance.GetRotationAngle(dir), 0));
+        GridBuilding gridBuilding = FindFirstObjectByType<GridBuilding>();
+        Transform placedObjectTransform = Instantiate(newBiomeSO.GetPrefab(), worldPosition, Quaternion.Euler(0, gridBuilding.GetRotationAngle(dir), 0));
 
         PlacedBiome placedObject = placedObjectTransform.GetComponent<PlacedBiome>();
 

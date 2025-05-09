@@ -10,14 +10,12 @@ using TMPro;
 
 public class GridBuilding : MonoBehaviour {
 
-    public static GridBuilding Instance { get; private set;}
-    public static GridXZ<BiomeTile> WorldBiomes { get; private set;}
-
-    public List<BiomeSO> biomeSOs = new List<BiomeSO>();
+    [SerializeField] private List<BiomeSO> biomeSOs = new List<BiomeSO>();
 
     private Directions placingDirection = Directions.Down;
     private BiomeSelectionPanel biomeSelectionPanel;
     private ToolSelectionPanel toolSelectionPanel;
+    private GridXZ<BiomeTile> worldBiomesGrid;
 
     public enum Directions {
         Down,
@@ -27,14 +25,11 @@ public class GridBuilding : MonoBehaviour {
     }
 
     private void Awake() {
-        if (Instance != null) Debug.LogError("There is more than one GridBuildingSystem instance!");
-        Instance = this;
-
         const int gridSize = 50;
         const int tileSize = 10;
         Vector3 origin = new Vector3((gridSize * -1 * 0.5f) * tileSize, 0, (gridSize * -1 * 0.5f) * tileSize);
 
-        WorldBiomes = new GridXZ<BiomeTile>(new Vector2Int(gridSize, gridSize), tileSize, origin, (GridXZ<BiomeTile> g, Vector2Int v) => new BiomeTile(g, v));
+        worldBiomesGrid = new GridXZ<BiomeTile>(new Vector2Int(gridSize, gridSize), tileSize, origin, (GridXZ<BiomeTile> g, Vector2Int v) => new BiomeTile(g, v));
     }
 
     private void Start() {
@@ -43,9 +38,9 @@ public class GridBuilding : MonoBehaviour {
         biomeSelectionPanel = FindFirstObjectByType<BiomeSelectionPanel>();
         toolSelectionPanel = FindFirstObjectByType<ToolSelectionPanel>();
 
-        Vector3 worldPosition = WorldBiomes.GetWorldPosition(WorldBiomes.GetCenterGridPosition());
-        PlacedBiome placedBiome = PlacedBiome.Create(worldPosition, WorldBiomes.GetCenterGridPosition(), placingDirection, biomeSOs[0]);
-        WorldBiomes.GetGridObject(WorldBiomes.GetCenterGridPosition()).SetBiomeObject(placedBiome);
+        Vector3 worldPosition = worldBiomesGrid.GetWorldPosition(worldBiomesGrid.GetCenterGridPosition());
+        PlacedBiome placedBiome = PlacedBiome.Create(worldPosition, worldBiomesGrid.GetCenterGridPosition(), placingDirection, biomeSOs[0]);
+        worldBiomesGrid.GetGridObject(worldBiomesGrid.GetCenterGridPosition()).SetBiomeObject(placedBiome);
     }
 
     private void GameInput_OnRotatePlacedPerformed(object sender, System.EventArgs e) {
@@ -57,18 +52,23 @@ public class GridBuilding : MonoBehaviour {
 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit raycastHit)) {
-            Vector2Int gridPosition = WorldBiomes.GetGridPosition(raycastHit.point);
+            Vector2Int gridPosition = worldBiomesGrid.GetGridPosition(raycastHit.point);
 
             if (toolSelectionPanel.IsSelectedToolAction(ToolSO.Action.Place)) {
-                PlaceBiomeOnGrid(WorldBiomes, gridPosition, biomeSelectionPanel.GetSelectedBiome());
+                bool isPlaced = PlaceBiomeOnGrid(worldBiomesGrid, gridPosition, biomeSelectionPanel.GetSelectedBiome());
+                if (isPlaced)   toolSelectionPanel.SetDestroyEnabled(true);
+
             } else if (toolSelectionPanel.IsSelectedToolAction(ToolSO.Action.Destroy)) {
+                DestroyObjectOnGrid(worldBiomesGrid, gridPosition);
+
                 int count = 0;
-                foreach (BiomeTile biomeTile in WorldBiomes.GetAllGridObjects()) {
+                foreach (BiomeTile biomeTile in worldBiomesGrid.GetAllGridObjects()) {
                     if (biomeTile.HasBiomeObject()) count += 1;
                 }
-                if (count <= 1) return; // Can't destroy the only tile
-                
-                DestroyObjectOnGrid(WorldBiomes, gridPosition);
+
+                if (count <= 1) { // Can't destroy the only tile
+                    toolSelectionPanel.SetDestroyEnabled(false);
+                } 
             }
             
         }
@@ -84,7 +84,7 @@ public class GridBuilding : MonoBehaviour {
                 return false;
             }
 
-            List<BiomeTile> neighborBiomes = WorldBiomes.GetNeighborGridObjects(placingGridPosition);
+            List<BiomeTile> neighborBiomes = worldBiomesGrid.GetNeighborGridObjects(placingGridPosition);
             bool foundNeighbor = false;
             foreach (BiomeTile biomeTile in neighborBiomes) {
                 if (biomeTile != null) {
@@ -213,5 +213,9 @@ public class GridBuilding : MonoBehaviour {
                 break;
         }
         return objectGridPositions;
+    }
+
+    public GridXZ<BiomeTile> GetWorldBiomesGrid() {
+        return worldBiomesGrid;
     }
 }

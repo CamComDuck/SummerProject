@@ -7,7 +7,7 @@ public class ToolButton : MonoBehaviour {
     
     public event EventHandler OnToolButtonClicked;
     
-    [SerializeField] private TMP_Text text;
+    [SerializeField] private Image image;
 
     private ToolSO tool;
 
@@ -20,7 +20,7 @@ public class ToolButton : MonoBehaviour {
     }
 
     public void SetupToolButton(ToolSO toolSO) {
-        text.text = toolSO.GetName();
+        image.sprite = toolSO.GetIcon();
         tool = toolSO;
     }
 
@@ -42,5 +42,9 @@ public class ToolButton : MonoBehaviour {
 
     public Color GetHighlightedColor() {
         return GetComponent<Button>().colors.highlightedColor;
+    }
+
+    public void SetButtonEnabled(bool isEnabled) {
+        GetComponent<Button>().interactable = isEnabled;
     }
 }
