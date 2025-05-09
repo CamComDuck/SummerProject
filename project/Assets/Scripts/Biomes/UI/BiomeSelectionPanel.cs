@@ -4,45 +4,46 @@ using UnityEngine;
 
 public class BiomeSelectionPanel : MonoBehaviour {
 
-    [SerializeField] private BiomePanel biomePanelPrefab;
+    [SerializeField] private BiomeButton biomePanelPrefab;
     [SerializeField] private GameObject biomePanelObject;
     [SerializeField] private BiomeSO testingSO;
     [SerializeField] private BiomeSO testingSO2;
 
-    private List<BiomePanel> biomePanels = new List<BiomePanel>();
-    private BiomePanel selectedPanel;
+    private List<BiomeButton> biomePanels = new List<BiomeButton>();
+    private BiomeButton selectedPanel;
     private Color normalColor;
-    private Color selectedColor;
+    private Color highlightedColor;
 
     void Start() {
-        FindFirstObjectByType<ToolSelectionPanel>().OnNewToolSelected += toolSelectionPanel_OnNewToolSelected;
+        FindFirstObjectByType<ToolSelectionPanel>().OnNewToolSelected += ToolSelectionPanel_OnNewToolSelected;
         AddBiomePanel(testingSO);
         AddBiomePanel(testingSO2);
         normalColor = biomePanels[0].GetNormalColor();
-        selectedColor = biomePanels[0].GetSelectedColor();
+        highlightedColor = biomePanels[0].GetHighlightedColor();
         SetSelectedBiome(biomePanels[0]);
+        biomePanelObject.SetActive(false);
     }
 
-    private void SetSelectedBiome(BiomePanel biomePanel) {
+    private void SetSelectedBiome(BiomeButton biomePanel) {
         if (selectedPanel != null) selectedPanel.SetColor(normalColor);
         selectedPanel = biomePanel;
-        selectedPanel.SetColor(selectedColor);
+        selectedPanel.SetColor(highlightedColor);
     }
 
     private void AddBiomePanel(BiomeSO biomeSO) {
-        BiomePanel newBiomePanel = Instantiate(biomePanelPrefab, biomePanelObject.transform);
+        BiomeButton newBiomePanel = Instantiate(biomePanelPrefab, biomePanelObject.transform);
         newBiomePanel.SetupBiomePanel(biomeSO);
         newBiomePanel.OnBiomePanelClicked += BiomePanel_OnClicked;
         biomePanels.Add(newBiomePanel);
     }
 
     private void BiomePanel_OnClicked(object sender, System.EventArgs e) {
-        SetSelectedBiome((BiomePanel)sender);
+        SetSelectedBiome((BiomeButton)sender);
     }
 
-    private void toolSelectionPanel_OnNewToolSelected(object sender, System.EventArgs e) {
+    private void ToolSelectionPanel_OnNewToolSelected(object sender, System.EventArgs e) {
         ToolSelectionPanel toolSelectionPanel = (ToolSelectionPanel)sender;
-        if (toolSelectionPanel.GetSelectedTool() == ToolSelectionPanel.Tools.Place) {
+        if (toolSelectionPanel.IsSelectedToolAction(ToolSO.Action.Place)) {
             biomePanelObject.SetActive(true);
         } else {
             biomePanelObject.SetActive(false);

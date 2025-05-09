@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class BiomePanel : MonoBehaviour {
+public class BiomeButton : MonoBehaviour {
 
     public event EventHandler OnBiomePanelClicked;
     
@@ -39,7 +39,7 @@ public class BiomePanel : MonoBehaviour {
         return GetComponent<Button>().colors.normalColor;
     }
 
-    public Color GetSelectedColor() {
-        return GetComponent<Button>().colors.selectedColor;
+    public Color GetHighlightedColor() {
+        return GetComponent<Button>().colors.highlightedColor;
     }
 }

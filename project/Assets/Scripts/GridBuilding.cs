@@ -53,7 +53,8 @@ public class GridBuilding : MonoBehaviour {
     }
 
     private void GameInput_OnPlacePerformed(object sender, System.EventArgs e) {
-        if (toolSelectionPanel.GetSelectedTool() != ToolSelectionPanel.Tools.Place) return;
+        if (!toolSelectionPanel.IsSelectedToolAction(ToolSO.Action.Place)) return;
+        
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit raycastHit)) {
             Vector2Int gridPosition = WorldBiomes.GetGridPosition(raycastHit.point);
