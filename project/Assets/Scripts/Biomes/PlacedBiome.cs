@@ -30,4 +30,8 @@ public class PlacedBiome : MonoBehaviour {
     public BiomeSO GetBiomeSO() {
         return biomeSO;
     }
+
+    public void SetGridPosition(Vector2Int newPosition) {
+        this.gridPosition = newPosition;
+    }
 }

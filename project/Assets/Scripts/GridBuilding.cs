@@ -11,11 +11,17 @@ using TMPro;
 public class GridBuilding : MonoBehaviour {
 
     [SerializeField] private List<BiomeSO> biomeSOs = new List<BiomeSO>();
+    [SerializeField] private Material validBuildMaterial;
+    [SerializeField] private Material invalidBuildMaterial;
 
     private Directions placingDirection = Directions.Down;
     private BiomeSelectionPanel biomeSelectionPanel;
     private ToolSelectionPanel toolSelectionPanel;
     private GridXZ<BiomeTile> worldBiomesGrid;
+
+    private Transform biomeGhost;
+    private BiomeSO biomeGhostSO;
+    private MeshRenderer biomeGhostMeshRenderer;
 
     public enum Directions {
         Down,
@@ -34,52 +40,93 @@ public class GridBuilding : MonoBehaviour {
 
     private void Start() {
         GameInput.OnCameraRotatePlacedPerformed += GameInput_OnRotatePlacedPerformed;
-        GameInput.OnClickPerformed += GameInput_OnClickPerformed;
         biomeSelectionPanel = FindFirstObjectByType<BiomeSelectionPanel>();
         toolSelectionPanel = FindFirstObjectByType<ToolSelectionPanel>();
 
-        Vector3 worldPosition = worldBiomesGrid.GetWorldPosition(worldBiomesGrid.GetCenterGridPosition());
-        PlacedBiome placedBiome = PlacedBiome.Create(worldPosition, worldBiomesGrid.GetCenterGridPosition(), placingDirection, biomeSOs[0]);
-        worldBiomesGrid.GetGridObject(worldBiomesGrid.GetCenterGridPosition()).SetBiomeObject(placedBiome);
+        PlaceBiomeOnGrid(worldBiomesGrid.GetCenterGridPosition(), biomeSOs[0]);
+    }
+
+    private void Update() {
+        if (toolSelectionPanel.IsSelectedToolAction(ToolSO.Action.Select)) return;
+        
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out RaycastHit raycastHit)) {
+            Vector2Int gridPosition = worldBiomesGrid.GetGridPosition(raycastHit.point);
+
+            if (toolSelectionPanel.IsSelectedToolAction(ToolSO.Action.Place)) { // PLACE tool
+                if (Input.GetMouseButton(0)) {
+                    bool isValid = IsValidBuildPosition(gridPosition);
+                    if (isValid) {
+                        PlaceBiomeOnGrid(gridPosition, biomeSelectionPanel.GetSelectedBiome());
+
+                        toolSelectionPanel.SetDestroyEnabled(true);
+                        DestroyBiomeGhost();
+                    }   
+                } 
+
+                Vector3 worldPosition = worldBiomesGrid.GetWorldPosition(gridPosition);
+
+                if (biomeGhostSO != biomeSelectionPanel.GetSelectedBiome()) {
+                    DestroyBiomeGhost();
+                }
+
+                if (biomeGhost == null) {
+                    biomeGhostSO = biomeSelectionPanel.GetSelectedBiome();
+                    biomeGhost = Instantiate(biomeGhostSO.GetPrefab(), worldPosition, Quaternion.Euler(0, GetRotationAngle(placingDirection), 0));
+                    biomeGhostMeshRenderer = biomeGhost.GetComponentInChildren<MeshRenderer>();
+                } 
+
+                biomeGhost.transform.position = worldPosition;
+                
+                if (IsValidBuildPosition(gridPosition)) {
+                    List<Material> materials = new() { biomeGhostMeshRenderer.material, validBuildMaterial};
+                    biomeGhostMeshRenderer.SetMaterials(materials);
+                
+                } else {
+                    List<Material> materials = new() { biomeGhostMeshRenderer.material, invalidBuildMaterial};
+                    biomeGhostMeshRenderer.SetMaterials(materials);
+                }              
+
+            } else if (toolSelectionPanel.IsSelectedToolAction(ToolSO.Action.Destroy)) { // DESTROY tool
+                DestroyBiomeGhost();
+
+                if (Input.GetMouseButton(0)) {
+                    DestroyObjectOnGrid(worldBiomesGrid, gridPosition);
+
+                    int count = 0;
+                    foreach (BiomeTile biomeTile in worldBiomesGrid.GetAllGridObjects()) {
+                        if (biomeTile.HasBiomeObject()) count += 1;
+                    }
+
+                    if (count <= 1) { // Can't destroy the only tile
+                        toolSelectionPanel.SetDestroyEnabled(false);
+                    } 
+                }
+                
+            }
+            
+        }        
     }
 
     private void GameInput_OnRotatePlacedPerformed(object sender, System.EventArgs e) {
         ChangeObjectRotation();
     }
 
-    private void GameInput_OnClickPerformed(object sender, System.EventArgs e) {
-        if (toolSelectionPanel.IsSelectedToolAction(ToolSO.Action.Select)) return;
-
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit raycastHit)) {
-            Vector2Int gridPosition = worldBiomesGrid.GetGridPosition(raycastHit.point);
-
-            if (toolSelectionPanel.IsSelectedToolAction(ToolSO.Action.Place)) {
-                bool isPlaced = PlaceBiomeOnGrid(worldBiomesGrid, gridPosition, biomeSelectionPanel.GetSelectedBiome());
-                if (isPlaced)   toolSelectionPanel.SetDestroyEnabled(true);
-
-            } else if (toolSelectionPanel.IsSelectedToolAction(ToolSO.Action.Destroy)) {
-                DestroyObjectOnGrid(worldBiomesGrid, gridPosition);
-
-                int count = 0;
-                foreach (BiomeTile biomeTile in worldBiomesGrid.GetAllGridObjects()) {
-                    if (biomeTile.HasBiomeObject()) count += 1;
-                }
-
-                if (count <= 1) { // Can't destroy the only tile
-                    toolSelectionPanel.SetDestroyEnabled(false);
-                } 
-            }
-            
+    private void DestroyBiomeGhost() {
+        if (biomeGhost != null) {
+            Destroy(biomeGhost.gameObject);
+            biomeGhost = null;
+            biomeGhostSO = null;
+            biomeGhostMeshRenderer = null;
         }
     }
 
-    public bool PlaceBiomeOnGrid(GridXZ<BiomeTile> biomeGrid, Vector2Int placingGridPosition, BiomeSO biomeSO) { // Returns if object was placed sucessfully
+    public bool IsValidBuildPosition(Vector2Int placingGridPosition) {
         if (placingGridPosition.x >= 0 && placingGridPosition.y >= 0) {
-            if (biomeGrid.GetGridObject(placingGridPosition) == null) {
+            if (worldBiomesGrid.GetGridObject(placingGridPosition) == null) {
                 // Debug.LogWarning("Biome would be partly outside grid!");
                 return false;
-            } else if (biomeGrid.GetGridObject(placingGridPosition).HasBiomeObject()) {
+            } else if (worldBiomesGrid.GetGridObject(placingGridPosition).HasBiomeObject()) {
                 // Debug.LogWarning("Biome already on this grid tile!");
                 return false;
             }
@@ -99,17 +146,19 @@ public class GridBuilding : MonoBehaviour {
                 // Debug.LogWarning("There are no biome tile neighbors");
                 return false;
             }
-
-            Vector3 worldPosition = biomeGrid.GetWorldPosition(placingGridPosition);
-            PlacedBiome placedBiome = PlacedBiome.Create(worldPosition, placingGridPosition, placingDirection, biomeSO);
-            biomeGrid.GetGridObject(placingGridPosition).SetBiomeObject(placedBiome);
             
             return true;
             
         } else {
-            Debug.LogWarning("Clicked outside of grid!");
+            Debug.LogWarning("Outside of grid!");
             return false;
         }
+    }
+
+    private void PlaceBiomeOnGrid(Vector2Int gridPosition, BiomeSO biome) {
+        Vector3 worldPosition = worldBiomesGrid.GetWorldPosition(gridPosition);
+        PlacedBiome placedBiome = PlacedBiome.Create(worldPosition, gridPosition, placingDirection, biome);
+        worldBiomesGrid.GetGridObject(gridPosition).SetBiomeObject(placedBiome);
     }
 
     public bool DestroyObjectOnGrid(GridXZ<BiomeTile> grid, BiomeTile biome) {
@@ -136,7 +185,7 @@ public class GridBuilding : MonoBehaviour {
                 return false;
             }
         } else {
-            Debug.LogWarning("Clicked outside of grid!");
+            Debug.LogWarning("Outside of grid!");
             return false;
         }
     }

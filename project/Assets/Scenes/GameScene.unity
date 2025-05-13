@@ -1069,6 +1069,8 @@ MonoBehaviour:
   biomeSOs:
   - {fileID: 11400000, guid: 1544a6cf7e96911439c7040f888b809f, type: 2}
   - {fileID: 11400000, guid: aca35e0a2f74d7f4b83094ad24553328, type: 2}
+  validBuildMaterial: {fileID: 2100000, guid: 671ac2a857e52ef499e21e3df6ae28bb, type: 2}
+  invalidBuildMaterial: {fileID: 2100000, guid: 1ecf452ca6ddbeb448b0a43892895dda, type: 2}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
